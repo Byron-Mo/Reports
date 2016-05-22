@@ -36,10 +36,10 @@ TransactionStore.__onDispatch = function(payload) {
 
 var getSelections = function(parameters, _transactions) {
   var results = {};
-  results[parameters.optionDate] = [];
-  for (var i = 0; i < 3; i++) {
+  for (var i = 0; i < parameters.months.length; i++) {
     results[parameters.months[i]] = [];
   }
+  results[parameters.optionDate] = [];
   results.selection = {};
 
   for (var j = 0; j < _transactions.length; j++) {
@@ -73,7 +73,6 @@ var getSelections = function(parameters, _transactions) {
       }
     }
   }
-
   return results
 };
 

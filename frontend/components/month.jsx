@@ -2,6 +2,15 @@ var React = require('react'),
     months = require('../constants/Months');
 
 var Month = React.createClass({
+  handleClick: function(event) {
+    event.preventDefault();
+    if (event.currentTarget.textContent === "<") {
+      this.props.handleMonthCycle(-1)
+    } else if (event.currentTarget.textContent === ">") {
+      this.props.handleMonthCycle(1)
+    }
+  },
+
   render: function() {
     var threeMonths = [];
 
@@ -20,13 +29,13 @@ var Month = React.createClass({
       var index = threeMonths.indexOf(month);
 
       if (index === 0) {
-        return <th key={index}><span>&lt;</span>{item}</th>
+        return <th key={index}><span onClick={this.handleClick}>&lt;</span> {item}</th>
       } else if (index === threeMonths.length - 1) {
-        return <th key={index}>{item}<span>&gt;</span></th>
+        return <th key={index}>{item} <span onClick={this.handleClick}>&gt;</span></th>
       } else {
         return <th key={index}>{item}</th>
       }
-    })
+    }.bind(this))
 
     for (var property in this.props.transactions[0]) {
       var optionDate = property;

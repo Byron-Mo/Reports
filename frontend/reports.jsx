@@ -4,13 +4,16 @@ var React = require('react'),
     TransactionStore = require('./stores/TransactionStore'),
     ApiUtil = require('./util/apiutil'),
     Month = require('./components/month'),
-    Cost = require('./components/cost');
+    Cost = require('./components/cost'),
+    Selection = require('./components/selection'),
+    SelectionList = require('./components/selectionlist');
 
 var Reports = React.createClass({
   getInitialState: function() {
     return {
       transactions: null,
-      currentMonths: this.getCurrentMonths(),
+      monthIndex: this.getMonthIndex(),
+      currentYear: this.getCurrentYear(),
       optionDate: this.getCurrentYear(),
       selection: "vendor"
     }
@@ -21,13 +24,16 @@ var Reports = React.createClass({
     return date.getFullYear();
   },
 
-  getCurrentMonths: function() {
-    var currentDate = new Date(),
-        currentMonthIndex = currentDate.getMonth(),
-        currentYear = currentDate.getFullYear(),
-        threeMonths = this.getPreviousTwoMonths(currentYear, currentMonthIndex);
+  getMonthIndex: function() {
+    var date = new Date();
+    return date.getMonth();
+  },
 
-    threeMonths.push(currentYear + ", " + currentMonthIndex)
+  getCurrentMonths: function() {
+    console.log(this.state.currentYear)
+    var threeMonths = this.getPreviousTwoMonths(this.state.currentYear, this.state.monthIndex);
+
+    threeMonths.push(this.state.currentYear + ", " + this.state.monthIndex)
     return threeMonths;
   },
 
@@ -48,7 +54,7 @@ var Reports = React.createClass({
   updateState: function() {
     var parameters = {
       optionDate: this.state.optionDate,
-      months: this.state.currentMonths,
+      months: this.getCurrentMonths(),
       selection: this.state.selection
     }
     this.setState({transactions: TransactionStore.getCurrentTransactions(parameters)})
@@ -59,12 +65,26 @@ var Reports = React.createClass({
     ApiUtil.fetchTransactions();
   },
 
+  handleSwitchSelection: function(selection) {
+    this.setState({selection: selection}, function() {
+      this.updateState();
+    })
+  },
+
+  handleMonthCycle: function(num) {
+    var index = this.state.monthIndex + num;
+    this.setState({monthIndex: index}, function() {
+      this.updateState();
+    })
+  },
+
   render: function() {
-    // console.log(this.state.transactions)
     return (
       <table>
-        <Month transactions={this.state.transactions} />
+        <Month transactions={this.state.transactions} handleMonthCycle={this.handleMonthCycle} />
         <Cost transactions={this.state.transactions} />
+        <Selection handleSwitchSelection={this.handleSwitchSelection} selection={this.state.selection}/>
+        <SelectionList transactions={this.state.transactions} />
       </table>
     )
   }
