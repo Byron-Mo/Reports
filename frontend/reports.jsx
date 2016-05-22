@@ -6,7 +6,9 @@ var React = require('react'),
     Month = require('./components/month'),
     Cost = require('./components/cost'),
     Selection = require('./components/selection'),
-    SelectionList = require('./components/selectionlist');
+    SelectionList = require('./components/selectionlist'),
+    months = require('./constants/Months'),
+    DropDown = require('./components/dropdown');
 
 var Reports = React.createClass({
   getInitialState: function() {
@@ -15,7 +17,8 @@ var Reports = React.createClass({
       monthIndex: this.getMonthIndex(),
       currentYear: this.getCurrentYear(),
       optionDate: this.getCurrentYear(),
-      selection: "vendor"
+      selection: "vendor",
+      dropdownActive: false
     }
   },
 
@@ -29,35 +32,15 @@ var Reports = React.createClass({
     return date.getMonth();
   },
 
-  getCurrentMonths: function() {
-    console.log(this.state.currentYear)
-    var threeMonths = this.getPreviousTwoMonths(this.state.currentYear, this.state.monthIndex);
-
-    threeMonths.push(this.state.currentYear + ", " + this.state.monthIndex)
-    return threeMonths;
-  },
-
-  getPreviousTwoMonths: function(currentYear, currentMonthIndex) {
-    var index = currentMonthIndex - 1,
-        twoMonths = [];
-
-    for (var i = 0; i < 2; i++) {
-      if (index < 0) {
-        index = months.length - 1
-      }
-      twoMonths.unshift(currentYear + ", " + index)
-      index--;
-    }
-    return twoMonths;
-  },
-
   updateState: function() {
     var parameters = {
       optionDate: this.state.optionDate,
-      months: this.getCurrentMonths(),
+      monthIndex: this.state.monthIndex,
+      currentYear: this.state.currentYear,
+      amount: 3,
       selection: this.state.selection
     }
-    this.setState({transactions: TransactionStore.getCurrentTransactions(parameters)})
+    this.setState({transactions: TransactionStore.getCurrentTransactions(parameters), years: TransactionStore.getYears()})
   },
 
   componentWillMount: function() {
@@ -71,21 +54,56 @@ var Reports = React.createClass({
     })
   },
 
-  handleMonthCycle: function(num) {
-    var index = this.state.monthIndex + num;
-    this.setState({monthIndex: index}, function() {
+  handleMonthCycle: function(monthVal) {
+    var index = this.state.monthIndex + monthVal,
+        year = this.state.currentYear;
+
+    if (index < 0) {
+      index = 11;
+      year--;
+    } else if (index > 11 ) {
+      index = 0;
+      year++;
+    }
+
+    this.setState({monthIndex: index, currentYear: year}, function() {
       this.updateState();
     })
   },
 
+  handleDropdown: function(activeBoolean) {
+    this.setState({dropdownActive: activeBoolean})
+  },
+
+  handleOptionChange: function(date) {
+    this.setState({optionDate: date}, function() {
+      this.updateState();
+    })
+  },
+
+
   render: function() {
     return (
-      <table>
-        <Month transactions={this.state.transactions} handleMonthCycle={this.handleMonthCycle} />
-        <Cost transactions={this.state.transactions} />
-        <Selection handleSwitchSelection={this.handleSwitchSelection} selection={this.state.selection}/>
-        <SelectionList transactions={this.state.transactions} />
-      </table>
+      <div>
+        <table>
+          <Month
+            transactions={this.state.transactions}
+            handleMonthCycle={this.handleMonthCycle}
+            monthIndex={this.state.monthIndex}
+            handleDropdown={this.handleDropdown}
+            dropdownActive={this.state.dropdownActive}
+          />
+          <Cost transactions={this.state.transactions} />
+          <Selection handleSwitchSelection={this.handleSwitchSelection} selection={this.state.selection}/>
+          <SelectionList transactions={this.state.transactions} />
+        </table>
+        <DropDown
+          dropdownActive={this.state.dropdownActive}
+          years={this.state.years}
+          handleOptionChange={this.handleOptionChange}
+          handleDropdown={this.handleDropdown}
+        />
+      </div>
     )
   }
 })
@@ -93,3 +111,25 @@ var Reports = React.createClass({
 document.addEventListener("DOMContentLoaded", function() {
   ReactDOM.render(<Reports />, document.getElementById("content"))
 })
+
+// getCurrentMonths: function() {
+//   console.log(this.state.currentYear)
+//   var threeMonths = this.getPreviousTwoMonths(this.state.currentYear, this.state.monthIndex);
+//
+//   threeMonths.push(this.state.currentYear + ", " + this.state.monthIndex)
+//   return threeMonths;
+// },
+//
+// getPreviousTwoMonths: function(currentYear, currentMonthIndex) {
+//   var index = currentMonthIndex - 1,
+//       twoMonths = [];
+//
+//   for (var i = 0; i < 2; i++) {
+//     if (index < 0) {
+//       index = months.length - 1
+//     }
+//     twoMonths.unshift(currentYear + ", " + index)
+//     index--;
+//   }
+//   return twoMonths;
+// },

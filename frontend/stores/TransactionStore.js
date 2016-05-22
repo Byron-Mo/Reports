@@ -3,7 +3,8 @@ var Store = require('flux/utils').Store,
     TransactionConstants = require('../constants/TransactionConstants'),
     _transactions = [],
     _sortedTransactionIds = [],
-    TransactionStore = new Store(Dispatcher);
+    TransactionStore = new Store(Dispatcher),
+    monthsConstant = require('../constants/Months');
 
 TransactionStore.getCurrentTransactions = function(parameters) {
   _sortedTransactionIds = [];
@@ -11,17 +12,23 @@ TransactionStore.getCurrentTransactions = function(parameters) {
   // get all transaction ids within three months
   // get all transaction ids
   var results = getSelections(parameters, _transactions);
+  console.log(results)
   var selections = results.selection;
 
   for (var property in results) {
     if (results.hasOwnProperty(property)) {
       if (property !== "selection") {
-        var column = {};
-        column[property] = getColumn(results[property], selections);
-        _sortedTransactionIds.push(column)
+        for (var prop in results[property]) {
+          if (results[property].hasOwnProperty(prop)) {
+            var column = {};
+            column[prop] = getColumn(results[property][prop], selections)
+            _sortedTransactionIds.push(column)
+          }
+        }
       }
     }
   }
+  console.log(_sortedTransactionIds)
   return _sortedTransactionIds;
 };
 
@@ -30,17 +37,52 @@ TransactionStore.resetTransactions = function(transactions) {
   TransactionStore.__emitChange();
 };
 
+TransactionStore.getYears = function() {
+  var years = {};
+  for (var i = 0; i < _transactions.length; i++) {
+    var date = new Date(_transactions[i].date)
+    years[date.getFullYear()] = true;
+  }
+  return Object.keys(years)
+};
+
 TransactionStore.__onDispatch = function(payload) {
   TransactionStore.resetTransactions(payload.transactions)
 };
 
-var getSelections = function(parameters, _transactions) {
-  var results = {};
-  for (var i = 0; i < parameters.months.length; i++) {
-    results[parameters.months[i]] = [];
+var getMonths = function(monthIndex, currentYear, amount) {
+  var months = [];
+
+  for (var i = 0; i < amount; i++) {
+    if (monthIndex < 0) {
+      monthIndex = monthsConstant.length - 1;
+      currentYear--;
+    } else if (monthIndex > 11) {
+      monthIndex = 0;
+      currentYear++;
+    }
+
+    var month = currentYear + ", " + monthIndex;
+    months.unshift(month)
+    monthIndex--;
   }
-  results[parameters.optionDate] = [];
-  results.selection = {};
+
+  // returns an array of months in the following format: ["2016, 2", "2016, 3"]
+  return months;
+};
+
+var getSelections = function(parameters, _transactions) {
+  var months = getMonths(parameters.monthIndex, parameters.currentYear, parameters.amount);
+
+  var results = {
+    optionDate: {},
+    months: {},
+    selection: {}
+  };
+  for (var i = 0; i < months.length; i++) {
+    results.months[months[i]] = [];
+  }
+  results.optionDate[parameters.optionDate] = [];
 
   for (var j = 0; j < _transactions.length; j++) {
     var date = new Date(_transactions[j].date),
@@ -52,11 +94,11 @@ var getSelections = function(parameters, _transactions) {
 
     var dateString = year + ", " + monthIndex;
     if (dateString === parameters.optionDate || year === parameters.optionDate) {
-      results[parameters.optionDate].push(id)
+      results.optionDate[parameters.optionDate].push(id)
     }
 
-    if (results[dateString]) {
-      results[dateString].push(id)
+    if (results.months[dateString]) {
+      results.months[dateString].push(id)
     }
 
     if (parameters.selection === "vendor") {
@@ -74,6 +116,7 @@ var getSelections = function(parameters, _transactions) {
     }
   }
   return results
+  // returns results in the form of: { 2016: [ids, ids], "2016, 2": [ids, ids], selection: {...}}
 };
 
 var getIntersections = function(optionDates, selectionArr) {

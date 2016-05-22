@@ -11,6 +11,11 @@ var Month = React.createClass({
     }
   },
 
+  handleDropdown: function(event) {
+    event.preventDefault();
+    this.props.handleDropdown(!this.props.dropdownActive)
+  },
+
   render: function() {
     var threeMonths = [];
 
@@ -22,11 +27,9 @@ var Month = React.createClass({
       }
     }
 
-    threeMonths = threeMonths.map(function(month) {
-      var index = parseInt(month.split(", ")[1])
-      var item = months[index][0].toUpperCase().concat(months[index].slice(1, months[index].length));
-
-      var index = threeMonths.indexOf(month);
+    threeMonths = threeMonths.map(function(month, index) {
+      var monthIndex = parseInt(month.split(", ")[1])
+      var item = months[monthIndex][0].toUpperCase().concat(months[monthIndex].slice(1, months[monthIndex].length)) + " " + month.split(", ")[0];
 
       if (index === 0) {
         return <th key={index}><span onClick={this.handleClick}>&lt;</span> {item}</th>
@@ -46,7 +49,7 @@ var Month = React.createClass({
         <tr>
           <th>Reports</th>
           {threeMonths}
-          <th>{optionDate}</th>
+          <th onClick={this.handleDropdown}>{optionDate}</th>
         </tr>
       </thead>
     )
