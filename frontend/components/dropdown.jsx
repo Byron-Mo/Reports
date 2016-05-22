@@ -11,33 +11,27 @@ var DropDown = React.createClass({
   },
 
   render: function() {
-    var yearList,
-        monthList = [];
+    var list = [];
 
     if (this.props.dropdownActive) {
-      yearList = this.props.years.map(function(year, index) {
-        return <li key={index} data-date={year} onClick={this.handleClick}>{year}</li>
-      }.bind(this))
-      yearList.unshift(<li key={"year"}><strong>Year</strong></li>)
-
-      for (var i = 0; i < months.length; i++) {
-        for (var j = 0; j < this.props.years.length; j++) {
+      for (var j = 0; j < this.props.years.length; j++) {
+        list.push(<li key={j} data-date={this.props.years[j]} onClick={this.handleClick}><strong>{this.props.years[j]}</strong></li>)
+        for (var i = 0; i < months.length; i++) {
           var month = months[i][0].toUpperCase().concat(months[i].slice(1, months[i].length))
-          monthList.push(<li
+          list.push(<li
             key={month + " " + this.props.years[j]}
             data-date={this.props.years[j] + ", " + i}
             onClick={this.handleClick}>
-            {month + " " + this.props.years[j]}
+            {month + " " + this.props.years[j].slice(2, this.props.years[j].length)}
           </li>)
         }
       }
-      monthList.unshift(<li key={"month"}><strong>Month</strong></li>)
+      // list.unshift(<li key={"month"}><strong>Month</strong></li>)
     }
 
     return (
       <div>
-        <ul>{yearList}</ul>
-        <ul>{monthList}</ul>
+        <ul>{list}</ul>
       </div>
     )
   }

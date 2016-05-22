@@ -111,25 +111,3 @@ var Reports = React.createClass({
 document.addEventListener("DOMContentLoaded", function() {
   ReactDOM.render(<Reports />, document.getElementById("content"))
 })
-
-// getCurrentMonths: function() {
-//   console.log(this.state.currentYear)
-//   var threeMonths = this.getPreviousTwoMonths(this.state.currentYear, this.state.monthIndex);
-//
-//   threeMonths.push(this.state.currentYear + ", " + this.state.monthIndex)
-//   return threeMonths;
-// },
-//
-// getPreviousTwoMonths: function(currentYear, currentMonthIndex) {
-//   var index = currentMonthIndex - 1,
-//       twoMonths = [];
-//
-//   for (var i = 0; i < 2; i++) {
-//     if (index < 0) {
-//       index = months.length - 1
-//     }
-//     twoMonths.unshift(currentYear + ", " + index)
-//     index--;
-//   }
-//   return twoMonths;
-// },
