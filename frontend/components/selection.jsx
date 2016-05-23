@@ -9,9 +9,13 @@ var Selection = React.createClass({
   render: function() {
     var row;
     if (this.props.selection === "vendor") {
-      row = <td colSpan="3"><span onClick={this.handleClick}><strong>Vendor</strong></span> | <span onClick={this.handleClick}>Category</span></td>
+      row = <td colSpan="3">
+        <span className="select-option"><strong>Vendor</strong></span> | <span onClick={this.handleClick} className="select-option">Category</span>
+      </td>
     } else if (this.props.selection === "category") {
-      row = <td colSpan="3"><span onClick={this.handleClick}>Vendor</span> | <span onClick={this.handleClick}><strong>Category</strong></span></td>
+      row = <td colSpan="3">
+        <span onClick={this.handleClick} className="select-option">Vendor</span> | <span className="select-option"><strong>Category</strong></span>
+      </td>
     }
 
     return (

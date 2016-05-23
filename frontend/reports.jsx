@@ -8,7 +8,8 @@ var React = require('react'),
     Selection = require('./components/selection'),
     SelectionList = require('./components/selectionlist'),
     months = require('./constants/Months'),
-    DropDown = require('./components/dropdown');
+    DropDown = require('./components/dropdown'),
+    $ = require('jquery');
 
 var Reports = React.createClass({
   getInitialState: function() {
@@ -46,6 +47,18 @@ var Reports = React.createClass({
   componentWillMount: function() {
     this.listener = TransactionStore.addListener(this.updateState)
     ApiUtil.fetchTransactions();
+
+    var getDeviceState = function() {
+      console.log(document.getElementsByClassName("state-indicator")[0].style)
+      return (document.getElementsByClassName("state-indicator")[0].style.zIndex)
+    }
+
+    var lastDeviceState = getDeviceState();
+    console.log(lastDeviceState)
+  },
+
+  componentWillUnmount: function() {
+    this.listener.remove();
   },
 
   handleSwitchSelection: function(selection) {
@@ -84,8 +97,8 @@ var Reports = React.createClass({
 
   render: function() {
     return (
-      <div>
-        <table>
+      <div className="report">
+        <table className="">
           <Month
             transactions={this.state.transactions}
             handleMonthCycle={this.handleMonthCycle}
@@ -108,6 +121,11 @@ var Reports = React.createClass({
   }
 })
 
+
 document.addEventListener("DOMContentLoaded", function() {
+
+
   ReactDOM.render(<Reports />, document.getElementById("content"))
+
+
 })

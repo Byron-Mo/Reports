@@ -1,0 +1,123 @@
+ul {
+  list-style: none;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  -webkit-padding-start: 0px;
+
+  width: 100px;
+  text-align: center;
+}
+
+li {
+  padding: 7px;
+  cursor: pointer;
+  transition: background-color 0.8s ease;
+}
+
+table {
+  text-align: center;
+  border-collapse: collapse;
+}
+
+td {
+  width: 75px;
+}
+
+td, th {
+  padding: 7px 10px;
+}
+
+tbody th {
+  width: 140px;
+}
+
+span {
+  cursor: pointer;
+}
+
+/*position of monthly cycle arrows*/
+.first-month, .last-month {
+  position: relative;
+}
+
+.first-month span {
+  left: 0;
+}
+
+.last-month span {
+  right: 0;
+}
+
+.first-month span,
+.last-month span {
+  position: absolute;
+  top: 50%;
+  transform: translate(0%, -50%);
+  font-size: 1.2em;
+}
+
+.first-month span:hover,
+.last-month span:hover {
+  font-size: 1.3em;
+}
+
+/*selection options*/
+.select-option {
+  padding: 5px 20px;
+}
+
+/*optional date dropdown menu*/
+.dropdown {
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.8s ease;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  right: 10%;
+  top: 15%;
+  font-size: 1.2em;
+}
+
+/*transaction table and dropdown option*/
+.report {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+.report-child {
+  position: absolute;
+  display: flex;
+}
+
+/*viewport resizing*/
+/* default state */
+.state-indicator {
+    z-index: 1;
+}
+
+/* small desktop */
+@media all and (max-width: 1200px) {
+    .state-indicator {
+        z-index: 2;
+    }
+}
+
+/* tablet */
+@media all and (max-width: 1024px) {
+    .state-indicator {
+        z-index: 3;
+    }
+}
+
+/* mobile phone */
+@media all and (max-width: 768px) {
+    .state-indicator {
+        z-index: 4;
+    }
+}
