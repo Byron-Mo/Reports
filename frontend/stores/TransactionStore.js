@@ -12,7 +12,6 @@ TransactionStore.getCurrentTransactions = function(parameters) {
   // get all transaction ids within three months
   // get all transaction ids
   var results = getSelections(parameters, _transactions);
-  console.log(results)
   var selections = results.selection;
 
   for (var property in results) {
@@ -28,7 +27,6 @@ TransactionStore.getCurrentTransactions = function(parameters) {
       }
     }
   }
-  console.log(_sortedTransactionIds)
   return _sortedTransactionIds;
 };
 

@@ -40,5 +40,4 @@ for (var i = 1; i <= 700; i++) {
   transactions.push(transaction)
 }
 
-// console.log(transactions[0].date)
 module.exports = transactions;

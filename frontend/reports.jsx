@@ -19,7 +19,8 @@ var Reports = React.createClass({
       currentYear: this.getCurrentYear(),
       optionDate: this.getCurrentYear(),
       selection: "vendor",
-      dropdownActive: false
+      dropdownActive: false,
+      amount: 3
     }
   },
 
@@ -38,7 +39,7 @@ var Reports = React.createClass({
       optionDate: this.state.optionDate,
       monthIndex: this.state.monthIndex,
       currentYear: this.state.currentYear,
-      amount: 3,
+      amount: this.state.amount,
       selection: this.state.selection
     }
     this.setState({transactions: TransactionStore.getCurrentTransactions(parameters), years: TransactionStore.getYears()})
@@ -48,13 +49,39 @@ var Reports = React.createClass({
     this.listener = TransactionStore.addListener(this.updateState)
     ApiUtil.fetchTransactions();
 
-    var getDeviceState = function() {
-      console.log(document.getElementsByClassName("state-indicator")[0].style)
-      return (document.getElementsByClassName("state-indicator")[0].style.zIndex)
-    }
+    // var mql = window.matchMedia("(min-width: 1200px)");
+    // mql.addListener(this.handleWindowChange)
+    // this.handleWindowChange(mql)
 
-    var lastDeviceState = getDeviceState();
-    console.log(lastDeviceState)
+
+    this.mqls = [
+      window.matchMedia("(min-width: 1200px)"),
+      window.matchMedia("(max-width: 1024px)"),
+      window.matchMedia("(max-width: 768px)")
+    ]
+
+    for (var i = 0; i < this.mqls.length; i++) {
+      this.mediaQueryResponse(this.mqls[i]);
+      this.mqls[i].addListener(this.mediaQueryResponse)
+    }
+  },
+
+  mediaQueryResponse: function(mql) {
+    if (this.mqls[0].matches) {
+      this.setState({amount: 6}, function() {
+        this.updateState();
+      })
+    }
+    if (this.mqls[1].matches) {
+      this.setState({amount: 4}, function() {
+        this.updateState()
+      })
+    }
+    if (this.mqls[2].matches) {
+      this.setState({amount: 3}, function() {
+        this.updateState()
+      })
+    }
   },
 
   componentWillUnmount: function() {
