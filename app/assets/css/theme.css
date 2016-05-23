@@ -6,7 +6,7 @@ th, .year-item {
   background-color: #cce6ff;
 }
 
-td, th, li {
+td, th, ul.dropdown-items li {
   border: 1px solid white;
 }
 
@@ -19,6 +19,6 @@ td, th, li {
   background-color: #ffe6e6;
 }
 
-.dropdown:hover, li:hover {
+.dropdown:hover, ul.dropdown-items li:hover {
   background-color: #80b3ff;
 }

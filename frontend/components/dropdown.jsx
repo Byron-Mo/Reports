@@ -32,10 +32,9 @@ var DropDown = React.createClass({
             {month + " " + this.props.years[j].slice(2, this.props.years[j].length)}
           </li>)
         }
-        listItem.push(<ul key={j}>{list}</ul>)
+        listItem.push(<ul key={j} className="dropdown-items">{list}</ul>)
         list = []
       }
-      // list.unshift(<li key={"month"}><strong>Month</strong></li>)
     }
 
     return (

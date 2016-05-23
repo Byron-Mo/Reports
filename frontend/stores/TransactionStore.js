@@ -6,11 +6,11 @@ var Store = require('flux/utils').Store,
     TransactionStore = new Store(Dispatcher),
     monthsConstant = require('../constants/Months');
 
+// get all transaction ids with the optionDate
+// get all transaction ids within three months
+// get all transaction ids
 TransactionStore.getCurrentTransactions = function(parameters) {
   _sortedTransactionIds = [];
-  // get all transaction ids with the optionDate
-  // get all transaction ids within three months
-  // get all transaction ids
   var results = getSelections(parameters, _transactions);
   var selections = results.selection;
 
@@ -48,6 +48,7 @@ TransactionStore.__onDispatch = function(payload) {
   TransactionStore.resetTransactions(payload.transactions)
 };
 
+// returns an array of months in the following format: ["2016, 2", "2016, 3"]
 var getMonths = function(monthIndex, currentYear, amount) {
   var months = [];
 
@@ -65,10 +66,10 @@ var getMonths = function(monthIndex, currentYear, amount) {
     monthIndex--;
   }
 
-  // returns an array of months in the following format: ["2016, 2", "2016, 3"]
   return months;
 };
 
+// returns results in the form of: { 2016: [ids, ids], "2016, 2": [ids, ids], selection: {...}}
 var getSelections = function(parameters, _transactions) {
   var months = getMonths(parameters.monthIndex, parameters.currentYear, parameters.amount);
 
@@ -114,7 +115,6 @@ var getSelections = function(parameters, _transactions) {
     }
   }
   return results
-  // returns results in the form of: { 2016: [ids, ids], "2016, 2": [ids, ids], selection: {...}}
 };
 
 var getIntersections = function(optionDates, selectionArr) {
@@ -161,6 +161,7 @@ var getTotalExpense = function(ids, _transactions) {
   return [income.toFixed(2), expense.toFixed(2)];
 }
 
+// selections is a hash that contains property as category with value as array of ids
 var getColumn = function(optionDates, selections) {
   var column = {
     income: 0,
@@ -173,7 +174,6 @@ var getColumn = function(optionDates, selections) {
   column.expense = amount[1]
   column.total = (column.income - column.expense).toFixed(2);
 
-  // selections is a hash that contains property as category with value as array of ids
   for (var property in selections) {
     if (selections.hasOwnProperty(property)) {
       var selectionArr = selections[property];

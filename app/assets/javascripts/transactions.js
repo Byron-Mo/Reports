@@ -1,8 +1,8 @@
 var categories = ["Taxes", "Restaurants", "Business", "Transportation", "Accommodations"],
-    vendors = ["Walmart", "Target", "Best Buy", "Home Depot", "Macy's", "Radio Shack"],
+    vendors = ["FedEx", "UPS", "Office Max", "Home Depot", "Microsoft", "Salesforce"],
     years = [2016, 2015],
     days = [],
-    months = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
+    months = require('../../../frontend/constants/Months'),
     transactions = [];
 
 for (var i = 1; i <= 31; i++) {

@@ -59,7 +59,11 @@ var Month = React.createClass({
         <tr>
           <th>Reports</th>
           {mainMonths}
-          <th onClick={this.handleDropdown} className="dropdown">{date} <span className="dropdown-arrow">+</span></th>
+          <th
+            onClick={this.handleDropdown}
+            className="dropdown">
+            {date} <span className="dropdown-arrow">+</span>
+          </th>
         </tr>
       </thead>
     )

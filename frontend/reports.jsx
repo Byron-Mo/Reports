@@ -49,11 +49,6 @@ var Reports = React.createClass({
     this.listener = TransactionStore.addListener(this.updateState)
     ApiUtil.fetchTransactions();
 
-    // var mql = window.matchMedia("(min-width: 1200px)");
-    // mql.addListener(this.handleWindowChange)
-    // this.handleWindowChange(mql)
-
-
     this.mqls = [
       window.matchMedia("(min-width: 1200px)"),
       window.matchMedia("(max-width: 1024px)"),
@@ -86,6 +81,9 @@ var Reports = React.createClass({
 
   componentWillUnmount: function() {
     this.listener.remove();
+    for (var i = 0; i < this.mqls.length; i++) {
+      this.mqls.removeListener(this.mediaQueryResponse)
+    }
   },
 
   handleSwitchSelection: function(selection) {
@@ -121,7 +119,6 @@ var Reports = React.createClass({
     })
   },
 
-
   render: function() {
     return (
       <div className="report">
@@ -134,7 +131,10 @@ var Reports = React.createClass({
             dropdownActive={this.state.dropdownActive}
           />
           <Cost transactions={this.state.transactions} />
-          <Selection handleSwitchSelection={this.handleSwitchSelection} selection={this.state.selection}/>
+          <Selection
+            handleSwitchSelection={this.handleSwitchSelection}
+            selection={this.state.selection}
+          />
           <SelectionList transactions={this.state.transactions} />
         </table>
         <DropDown
@@ -150,9 +150,5 @@ var Reports = React.createClass({
 
 
 document.addEventListener("DOMContentLoaded", function() {
-
-
   ReactDOM.render(<Reports />, document.getElementById("content"))
-
-
 })
